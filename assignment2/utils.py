@@ -217,3 +217,36 @@ def evaluate_partition(golden_partition, algorithm_partition, G, prr):
     metrics['jaccard_index'] = jaccard_index_partition(y_true, y_pred)
     
     return metrics
+
+
+def move_files_to_sbm_folder():
+    """
+    Move all Pajek files (.net and .clu) created by analyze_specific_prr_values
+    to a subfolder named 'SBM'.
+    """
+    # Create SBM folder if it doesn't exist
+    if not os.path.exists('SBM'):
+        os.makedirs('SBM')
+        print("Created SBM folder")
+    
+    # Find all .net and .clu files in the current directory
+    pajek_files = []
+    for file in os.listdir('.'):
+        if file.endswith('.net') or file.endswith('.clu'):
+            pajek_files.append(file)
+    
+    # Move files to SBM folder
+    moved_count = 0
+    for file in pajek_files:
+        source = file
+        destination = os.path.join('SBM', file)
+        try:
+            shutil.move(source, destination)
+            moved_count += 1
+            print(f"Moved: {file} → SBM/{file}")
+        except Exception as e:
+            print(f"Error moving {file}: {e}")
+    
+    print(f"\nMoved {moved_count} files to the SBM folder")
+
+move_files_to_sbm_folder()
